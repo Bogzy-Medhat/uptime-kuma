@@ -1,0 +1,29 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Build Step
+      run: echo "Building the frontend..."
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy Frontend to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.FRONTEND_IP }} << EOF
+        echo "Deploying frontend"
+        # Add your actual deployment commands here
+        EOF
