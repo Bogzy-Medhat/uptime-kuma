@@ -30,7 +30,7 @@ jobs:
     steps:
     - name: Deploy Frontend to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.FRONTEND_IP }} << EOF
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.FRONTEND_IP }}
         echo "Deploying frontend"
         cd /path/to/your/frontend
         git pull origin master
@@ -39,6 +39,3 @@ jobs:
 
         # Add your actual deployment commands here
         EOF
-    env:
-      EC2_PRIVATE_KEY: ${{ secrets.KEY_PAIR }}
-      FRONTEND_IP: ${{ secrets.FRONTEND_IP }}
