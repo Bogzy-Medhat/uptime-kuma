@@ -31,19 +31,19 @@ jobs:
       run: |
         ssh -i ~/ec2_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.FRONTEND_IP }} << EOF
           echo "Deploying uptime-kuma"
-          # Update package lists
-          sudo apt update
-          # Install Node.js and npm
-          curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-          sudo apt-get install -y nodejs
-          # Clone uptime-kuma repo if not exists
-          if [ ! -d "/home/ubuntu/uptime-kuma" ]; then
-            git clone https://github.com/Bogzy-Medhat/uptime-kuma.git /home/ubuntu/uptime-kuma
-          fi
-          cd /home/ubuntu/uptime-kuma
-          git pull origin master
-          npm install
-          npm run build
+          # # Update package lists
+          # sudo apt update
+          # # Install Node.js and npm
+          # curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+          # sudo apt-get install -y nodejs
+          # # Clone uptime-kuma repo if not exists
+          # if [ ! -d "/home/ubuntu/uptime-kuma" ]; then
+          #   git clone https://github.com/Bogzy-Medhat/uptime-kuma.git /home/ubuntu/uptime-kuma
+          # fi
+          # cd /home/ubuntu/uptime-kuma
+          # git pull origin master
+          # npm install
+          # npm run build
         EOF
       env:
         EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
