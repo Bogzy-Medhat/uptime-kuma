@@ -16,6 +16,13 @@ jobs:
     - name: Build Step
       run: echo "Building the frontend..."
 
+    - name: Set up SSH
+      run: |
+        # Write the SSH private key to a file
+        echo "${{ secrets.KEY_PAIR }}" > ~/Obelion_task.pem
+        # Ensure the private key has the correct permissions
+        chmod 600 ~/Obelion_task.pem
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -25,5 +32,13 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.FRONTEND_IP }} << EOF
         echo "Deploying frontend"
+        cd /path/to/your/frontend
+        git pull origin master
+        npm install
+        npm run build
+
         # Add your actual deployment commands here
         EOF
+    env:
+      EC2_PRIVATE_KEY: ${{ secrets.KEY_PAIR }}
+      FRONTEND_IP: ${{ secrets.FRONTEND_IP }}
