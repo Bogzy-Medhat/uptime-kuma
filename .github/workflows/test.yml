@@ -13,6 +13,12 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v2
 
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
     - name: Build Step
       run: echo "Building the frontend..."
 
@@ -31,19 +37,11 @@ jobs:
       run: |
         ssh -i ~/ec2_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.FRONTEND_IP }} << EOF
           echo "Deploying uptime-kuma"
-          # # Update package lists
-          # sudo apt update
-          # # Install Node.js and npm
-          # curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-          # sudo apt-get install -y nodejs
-          # # Clone uptime-kuma repo if not exists
-          # if [ ! -d "/home/ubuntu/uptime-kuma" ]; then
-          #   git clone https://github.com/Bogzy-Medhat/uptime-kuma.git /home/ubuntu/uptime-kuma
-          # fi
-          # cd /home/ubuntu/uptime-kuma
-          # git pull origin master
-          # npm install
-          # npm run build
+          # Run Uptime Kuma
+          sudo docker stop uptime-kuma || true
+          sudo docker rm uptime-kuma || true
+          sudo docker run -d --restart=always -p 3001:3001 -v uptime-kuma:/app/data --name uptime-kuma louislam/uptime-kuma:1
+          sudodocker run -d --restart=always -p 127.0.0.1:3001:3001 -v uptime-kuma:/app/data --name uptime-kuma louislam/uptime-kuma:1
         EOF
       env:
         EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
